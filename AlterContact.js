@@ -1,37 +1,22 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Input, Button, Text, Avatar } from 'react-native-elements';
+import { Input, Button, Text } from 'react-native-elements';
 
-export default function RegisterScreen() {
+export default function AlterContact() {
   const [name, setName] = useState('');
-  const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [telefone, setTelefone] = useState('');
 
 
   return (
     <View style={styles.container}>
-      <Avatar
-        size="xlarge"
-        rounded
-        source={{ uri: 'https://randomuser.me/api/portraits/men/1.jpg' }}
-        containerStyle={styles.avatar}
-      />
-      <Text h3 style={styles.title}>Cadastro</Text>
+      
 
       <Input
         placeholder="Nome"
         leftIcon={{ type: 'feather', name: 'user' }}
         value={name}
         onChangeText={setName}
-      />
-
-      <Input
-        placeholder="CPF"
-        leftIcon={{ type: 'feather', name: 'credit-card' }}
-        keyboardType="numeric"
-        value={cpf}
-        onChangeText={setCpf}
       />
 
       <Input
@@ -42,18 +27,26 @@ export default function RegisterScreen() {
         onChangeText={setEmail}
       />
 
-      <Input
-        placeholder="Senha"
-        leftIcon={{ type: 'feather', name: 'lock' }}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+    <Input
+        placeholder="Telefone"
+        leftIcon={{ type: 'feather', name: 'phone' }}
+        keyboardType="phone-pad"
+        value={telefone}
+        onChangeText={setTelefone}
+    />
+
 
       <Button
-        title="Cadastrar"
+        title="Alterar"
         containerStyle={styles.button}
         buttonStyle={styles.buttonStyle}
+        titleStyle={styles.buttonText}
+      />
+
+        <Button
+        title="Excluir"
+        containerStyle={styles.button}
+        buttonStyle={styles.buttonStyle2}
         titleStyle={styles.buttonText}
       />
     </View>
@@ -82,6 +75,12 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     backgroundColor: '#4A90E2',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  buttonStyle2: {
+    backgroundColor: '#F44336',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,

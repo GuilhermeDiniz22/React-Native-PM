@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Input, Button, Text } from 'react-native-elements';
 
-export default function ForgotPassword({ navigation }) {
+export default function RegisterContact() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
 
 
   return (
     <View style={styles.container}>
-      <Text h3 style={styles.title}>Esqueceu a Senha</Text>
+
+      <Input
+        placeholder="Nome"
+        leftIcon={{ type: 'feather', name: 'user' }}
+        value={name}
+        onChangeText={setName}
+      />
 
       <Input
         placeholder="E-mail"
@@ -18,18 +26,20 @@ export default function ForgotPassword({ navigation }) {
         onChangeText={setEmail}
       />
 
-      <Button
-        title="Enviar"
-        containerStyle={{ marginTop: 15 }}
-        buttonStyle={styles.button}
-        titleStyle={styles.buttonText}
-      />
+    <Input
+        placeholder="Telefone"
+        leftIcon={{ type: 'feather', name: 'phone' }}
+        keyboardType="phone-pad"
+        value={telefone}
+        onChangeText={setTelefone}
+    />
+
 
       <Button
-        title="Voltar ao Login"
-        type="clear"
-        titleStyle={styles.linkText}
-        onPress={() => navigation.navigate('Login')}
+        title="Salvar"
+        containerStyle={styles.button}
+        buttonStyle={styles.buttonStyle}
+        titleStyle={styles.buttonText}
       />
     </View>
   );
@@ -48,23 +58,22 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  avatar: {
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
   button: {
-    backgroundColor: '#4A90E2', 
+    marginTop: 15,
+  },
+  buttonStyle: {
+    backgroundColor: '#4A90E2',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
-    alignItems: 'center',
   },
   buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
     color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-  linkText: {
-    color: '#4A90E2',
-    fontSize: 16,
-    fontWeight: '600',
-    marginTop: 10,
-    textAlign: 'center',
   },
 });
