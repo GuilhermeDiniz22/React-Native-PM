@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
-import RegisterScreen from './Register';
-import LoginScreen from './Login';
+import Welcome from './Welcome';
+import Mensagens from './Mensagens';
+import Destination from './Destination';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <LoginScreen />
+      <Welcome />
     </View>
   );
 }
