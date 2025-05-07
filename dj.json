@@ -1,0 +1,60 @@
+{
+  "mensagens": [
+    {
+      "id": 1,
+      "nome": "Claudia Alves",
+      "mensagem": "Do more of what you love.",
+      "hora": "3m ago",
+      "naolido": 3,
+      "avatar": "https://randomuser.me/api/portraits/women/56.jpg"
+    },
+    {
+      "id": 2,
+      "nome": "Dani Martinez",
+      "mensagem": "Do your own thing.",
+      "hora": "5m ago",
+      "naolido": 1,
+      "avatar": "https://randomuser.me/api/portraits/women/57.jpg"
+    },
+    {
+      "id": 3,
+      "nome": "Kimberly Nguyen",
+      "mensagem": "Kindness is beautiful.",
+      "hora": "1h ago",
+      "naolido": 2,
+      "avatar": "https://randomuser.me/api/portraits/women/58.jpg"
+    },
+    {
+      "id": 4,
+      "nome": "Mariana Napolitani",
+      "mensagem": "Live your purpose.",
+      "hora": "2h ago",
+      "naolido": 1,
+      "avatar": "https://randomuser.me/api/portraits/women/59.jpg"
+    },
+    {
+      "id": 5,
+      "nome": "Olivia Wilson",
+      "mensagem": "You got this.",
+      "hora": "5h ago",
+      "naolido": 0,
+      "avatar": "https://randomuser.me/api/portraits/women/44.jpg"
+    },
+    {
+      "id": 6,
+      "nome": "Rachelle Beaudry",
+      "mensagem": "You're wonderful.",
+      "hora": "Yesterday",
+      "naolido": 0,
+      "avatar": "https://randomuser.me/api/portraits/women/45.jpg"
+    },
+    {
+      "id": 7,
+      "nome": "Soo Jin Ae",
+      "mensagem": "Keep it simple.",
+      "hora": "Yesterday",
+      "naolido": 0,
+      "avatar": "https://randomuser.me/api/portraits/women/46.jpg"
+    }
+  ]
+}

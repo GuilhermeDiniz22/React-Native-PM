@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,60 +8,18 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-
-const mensagens = [
-  {
-    nome: 'Claudia Alves',
-    mensagem: 'Do more of what you love.',
-    hora: '3m ago',
-    naolido: 3,
-    avatar: 'https://randomuser.me/api/portraits/women/56.jpg'
-  },
-  {
-    nome: 'Dani Martinez',
-    mensagem: 'Do your own thing.',
-    hora: '5m ago',
-    naolido: 1,
-    avatar: 'https://randomuser.me/api/portraits/women/57.jpg'
-  },
-  {
-    nome: 'Kimberly Nguyen',
-    mensagem: 'Kindness is beautiful.',
-    hora: '1h ago',
-    naolido: 2,
-    avatar: 'https://randomuser.me/api/portraits/women/58.jpg'
-  },
-  {
-    nome: 'Mariana Napolitani',
-    mensagem: 'Live your purpose.',
-    hora: '2h ago',
-    naolido: 1,
-    avatar: 'https://randomuser.me/api/portraits/women/59.jpg'
-  },
-  {
-    nome: 'Olivia Wilson',
-    mensagem: 'You got this.',
-    hora: '5h ago',
-    naolido: 0,
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg'
-  },
-  {
-    nome: 'Rachelle Beaudry',
-    mensagem: "You're wonderful.",
-    hora: 'Yesterday',
-    naolido: 0,
-    avatar: 'https://randomuser.me/api/portraits/women/45.jpg'
-  },
-  {
-    nome: 'Soo Jin Ae',
-    mensagem: 'Keep it simple.',
-    hora: 'Yesterday',
-    naolido: 0,
-    avatar: 'https://randomuser.me/api/portraits/women/46.jpg'
-  }
-];
+import axios from 'axios';
 
 const Mensagem = () => {
+  const [mensagens, setMensagens] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://10.0.2.2:3001/mensagens') 
+      .then(response => setMensagens(response.data))
+      .catch(error => console.error('Erro ao buscar mensagens:', error));
+  }, []);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
       <View style={styles.header}>
@@ -117,6 +75,7 @@ const Mensagem = () => {
     </ScrollView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
