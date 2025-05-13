@@ -1,10 +1,32 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { Input, Button, Text, Avatar } from 'react-native-elements';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebaseConfig'; // ajuste o caminho conforme a localização do arquivo
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Erro', 'Preencha todos os campos!');
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      Alert.alert('Sucesso', 'Login realizado com sucesso!');
+      
+      navigation.replace('Home'); 
+
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Erro ao fazer login', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -15,7 +37,7 @@ export default function LoginScreen({ navigation }) {
         containerStyle={styles.avatar}
       />
       <Text h3 style={styles.title}>Login</Text>
-      
+
       <Input
         placeholder="E-mail"
         leftIcon={{ type: 'feather', name: 'mail' }}
@@ -23,7 +45,7 @@ export default function LoginScreen({ navigation }) {
         value={email}
         onChangeText={setEmail}
       />
-      
+
       <Input
         placeholder="Senha"
         leftIcon={{ type: 'feather', name: 'lock' }}
@@ -31,13 +53,13 @@ export default function LoginScreen({ navigation }) {
         value={password}
         onChangeText={setPassword}
       />
-      
+
       <Button
         title="Login"
         containerStyle={styles.buttonContainer}
         buttonStyle={styles.button}
         titleStyle={styles.buttonText}
-        onPress={() => alert('Login realizado (simulado)')}
+        onPress={handleLogin}
       />
 
       <Button
@@ -49,13 +71,12 @@ export default function LoginScreen({ navigation }) {
       />
 
       <Button
-        title="Esqueceu a Senha"
+        title="Esqueceu a Senha?"
         containerStyle={styles.buttonContainer}
         buttonStyle={styles.button}
         titleStyle={styles.buttonText}
         onPress={() => navigation.navigate('ForgotPassword')}
       />
-
     </View>
   );
 }
@@ -79,7 +100,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 15,
-    backgroundColor: '#4A90E2', 
+    backgroundColor: '#4A90E2',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -90,5 +111,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
+  buttonContainer: {
+    marginTop: 10,
+  },
 });
-

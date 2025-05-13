@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { Input, Button, Text, Avatar } from 'react-native-elements';
+import { createUserWithEmailAndPassword } from '@react-native-firebase/auth';
+import { doc, setDoc } from '@react-native-firebase/firestore';
+import { auth, db } from '../firebaseConfig'; // ajuste o caminho se necessário
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -8,6 +11,31 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const handleRegister = async () => {
+    if (!name || !cpf || !email || !password) {
+      Alert.alert('Erro', 'Preencha todos os campos!');
+      return;
+    }
+
+    try {
+      // Criação do usuário no Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Salvar dados do usuário no Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        name,
+        cpf,
+        email,
+        createdAt: new Date(),
+      });
+
+      Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Erro', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -52,6 +80,7 @@ export default function RegisterScreen() {
 
       <Button
         title="Cadastrar"
+        onPress={handleRegister}
         containerStyle={styles.button}
         buttonStyle={styles.buttonStyle}
         titleStyle={styles.buttonText}
