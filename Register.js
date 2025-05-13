@@ -3,7 +3,7 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { Input, Button, Text, Avatar } from 'react-native-elements';
 import { createUserWithEmailAndPassword } from '@react-native-firebase/auth';
 import { doc, setDoc } from '@react-native-firebase/firestore';
-import { auth, db } from '../firebaseConfig'; // ajuste o caminho se necessário
+import { auth, db } from './firebase'; 
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');

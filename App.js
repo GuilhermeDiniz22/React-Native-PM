@@ -1,13 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native';
-import Welcome from './Welcome';
-import Mensagens from './Mensagens';
-import Destination from './Destination';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './Login';
+import RegisterScreen from './Register';  
+import ForgotPasswordScreen from './ForgotPassword';  
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Welcome />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

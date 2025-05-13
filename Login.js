@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Input, Button, Text, Avatar } from 'react-native-elements';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig'; // ajuste o caminho conforme a localização do arquivo
+import { auth } from './firebase';  
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -19,8 +19,7 @@ export default function LoginScreen({ navigation }) {
       const user = userCredential.user;
 
       Alert.alert('Sucesso', 'Login realizado com sucesso!');
-      
-      navigation.replace('Home'); 
+    
 
     } catch (error) {
       console.error(error);
