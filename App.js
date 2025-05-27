@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from 'react-native';
-import RegisterScreen from './Register';
 import LoginScreen from './Login';
 
 export default function App() {

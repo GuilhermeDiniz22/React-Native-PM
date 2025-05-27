@@ -1,39 +1,165 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Input, Button, Text } from 'react-native-elements';
-import { Avatar } from 'react-native-elements';
+import React, { useState, useEffect } from 'react';
+import { Button, Text } from 'react-native-elements';
+import {
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [images, setImages] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [loadingImages, setLoadingImages] = useState(false);
 
+  const CLOUD_NAME = 'drsvyyi4o';
+  const UPLOAD_PRESET = 'aula8ifpe';
+  const BACKEND_URL = 'http://192.168.56.1:3001';
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permissão necessária',
+          'Precisamos da sua permissão para acessar a galeria.'
+        );
+      } else {
+        loadImages();
+      }
+    })();
+  }, []);
+
+  const loadImages = async () => {
+    setLoadingImages(true);
+    try {
+      const res = await fetch(`${BACKEND_URL}/images`);
+      const data = await res.json();
+      setImages(data);
+    } catch (error) {
+      Alert.alert('Erro', 'Falha ao carregar imagens');
+    } finally {
+      setLoadingImages(false);
+    }
+  };
+
+  const uploadToCloudinary = async (photo) => {
+    setUploading(true);
+
+    const data = new FormData();
+    data.append('file', {
+      uri: photo.uri,
+      type: photo.type || 'image/jpeg',
+      name: photo.fileName || 'upload.jpg',
+    });
+    data.append('upload_preset', UPLOAD_PRESET);
+    data.append('tags', 'aula8ifpe');
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: 'POST',
+          body: data,
+        }
+      );
+      const result = await res.json();
+
+      if (result.secure_url) {
+        setImages((prev) => [result, ...prev]);
+      } else {
+        Alert.alert('Erro no upload', 'Falha ao enviar imagem para Cloudinary');
+      }
+    } catch (error) {
+      Alert.alert('Erro no upload', error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const deleteImage = (public_id) => {
+    Alert.alert(
+      'Deletar imagem',
+      'Deseja realmente remover esta imagem?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Remover',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const res = await fetch(`${BACKEND_URL}/delete-image`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ public_id }),
+              });
+
+              const json = await res.json();
+
+              if (json.result === 'ok') {
+                setImages((prev) =>
+                  prev.filter((img) => img.public_id !== public_id)
+                );
+                Alert.alert('Sucesso', 'Imagem deletada');
+              } else {
+                Alert.alert('Erro', 'Falha ao deletar imagem');
+              }
+            } catch (error) {
+              Alert.alert('Erro', error.message);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const photo = result.assets[0];
+      await uploadToCloudinary(photo);
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.imageContainer}>
+      <Image source={{ uri: item.secure_url }} style={styles.image} />
+      <TouchableOpacity
+        onPress={() => deleteImage(item.public_id)}
+        style={styles.deleteButton}
+      >
+        <Text style={styles.deleteText}>Deletar</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <Avatar
-        size="xlarge"
-        rounded
-        source={{ uri: 'https://randomuser.me/api/portraits/men/1.jpg' }}
-        containerStyle={styles.avatar}
-      />
-      <Text h3 style={styles.title}>Login</Text>
-      <Input
-        placeholder="E-mail"
-        leftIcon={{ type: 'feather', name: 'mail' }}
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <Input
-        placeholder="Senha"
-        leftIcon={{ type: 'feather', name: 'lock' }}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Login"  containerStyle={styles.button} buttonStyle={{ backgroundColor: 'green' }} />
-      <Button title="Cadastre-se"  containerStyle={styles.button} buttonStyle={{ backgroundColor: 'green' }} />
-      <Text h4 style={styles.title}>Esqueceu a Senha</Text>
+      <Button title="Selecionar imagem" onPress={pickImage} />
+
+      {uploading && (
+        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 10 }} />
+      )}
+
+      {loadingImages ? (
+        <ActivityIndicator size="large" color="green" style={{ marginTop: 20 }} />
+      ) : (
+        <FlatList
+          data={images}
+          keyExtractor={(item) => item.public_id}
+          renderItem={renderItem}
+          contentContainerStyle={{ marginTop: 20 }}
+        />
+      )}
     </View>
   );
 }
@@ -41,19 +167,29 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 20,
+    paddingTop: 60,
+    paddingHorizontal: 20,
     backgroundColor: '#fff',
   },
-  title: {
-    textAlign: 'center',
-    marginBottom: 20,
+  imageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    gap: 10,
   },
-  avatar: {
-    marginBottom: 20,
-    alignSelf: 'center',
+  image: {
+    width: 120,
+    height: 120,
+    borderRadius: 8,
   },
-  button: {
-    marginTop: 10,
+  deleteButton: {
+    backgroundColor: '#ff4d4d',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+  },
+  deleteText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
