@@ -51,7 +51,8 @@ app.post('/delete-image', async (req, res) => {
   }
 });
 
-// Inicia o servidor
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://192.168.56.1:${PORT}`);
+const HOST = '0.0.0.0';  // escuta todas as interfaces de rede
+
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Servidor rodando em http://${HOST}:${PORT}`);
 });
